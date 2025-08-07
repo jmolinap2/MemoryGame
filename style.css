@@ -1,0 +1,196 @@
+:root {
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'Lato', sans-serif;
+    --color-bg: #111;
+    --color-card-front: #008c8c; /* Verde-azulado */
+    --color-card-back: #1e1e1e;
+    --color-accent: #ff0055; /* Rosa/Magenta */
+    --color-text: #f0f0f0;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    min-height: 100vh;
+    overflow: hidden; /* Evita el scroll mientras está el splash */
+}
+
+/* --- Portal de Inicio (Splash Screen) --- */
+#splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 100;
+    opacity: 1;
+    transition: opacity 0.8s ease-out, visibility 0.8s;
+}
+
+#splash-screen.hide {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.splash-content h1 {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 15vw, 8rem);
+    color: var(--color-text);
+    letter-spacing: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.splash-content p {
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    margin-bottom: 2rem;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#start-game-btn {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 5vw, 1.8rem);
+    letter-spacing: 2px;
+    padding: 0.8em 2em;
+    border: 2px solid var(--color-accent);
+    border-radius: 4px;
+    background-color: transparent;
+    color: var(--color-accent);
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#start-game-btn:hover {
+    background-color: var(--color-accent);
+    color: var(--color-text);
+}
+
+/* --- Contenido Principal --- */
+.main-content {
+    display: none; /* Se muestra con JS */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+.main-content h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    color: var(--color-text);
+    letter-spacing: 3px;
+    margin-bottom: 1rem;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.game-info {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    font-weight: 700;
+}
+
+.game-info p {
+    background-color: #222;
+    padding: 0.5em 1em;
+    border-radius: 4px;
+}
+
+.memory-game {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: clamp(0.5rem, 2.5vw, 1rem);
+    perspective: 1000px;
+}
+
+.memory-card {
+    border-radius: 8px;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    cursor: pointer;
+}
+
+.memory-card.flip {
+    transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 10vw, 3.5rem);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.card-front {
+    background: var(--color-card-back);
+    border: 2px solid var(--color-card-front);
+    color: var(--color-card-front);
+}
+
+.card-back {
+    background-color: var(--color-card-front);
+    color: var(--color-bg);
+    transform: rotateY(180deg);
+}
+
+.memory-card.flip .card-front {
+    border-color: var(--color-accent);
+}
+
+#reset-game-btn {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    letter-spacing: 1px;
+    margin-top: 1rem;
+    padding: 0.8em 1.5em;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--color-accent);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#reset-game-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(255, 0, 85, 0.5);
+}

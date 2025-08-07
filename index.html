@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Memoria | Estilo Calamar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Portal de Inicio -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <h1>Juego de Memoria</h1>
+            <p>Encuentra todas las parejas en el menor número de movimientos.</p>
+            <button id="start-game-btn">Iniciar Juego</button>
+        </div>
+    </div>
+
+    <!-- Contenido Principal del Juego -->
+    <main class="main-content" style="display: none;">
+        <h1>Juego de Memoria</h1>
+        <div class="game-container">
+            <div class="game-info">
+                <p>Movimientos: <span id="moves-count">0</span></p>
+                <p>Mejor Puntuación: <span id="best-score">-</span></p>
+            </div>
+            <section class="memory-game">
+                <!-- Las tarjetas se generarán con JavaScript -->
+            </section>
+        </div>
+        <button id="reset-game-btn">Reiniciar Juego</button>
+    </main>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
