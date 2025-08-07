@@ -16,12 +16,21 @@
     padding: 0;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: var(--font-body);
-    background-color: var(--color-bg);
+    background: radial-gradient(circle at top, #222, var(--color-bg));
     color: var(--color-text);
     min-height: 100vh;
-    overflow: hidden; /* Evita el scroll mientras está el splash */
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+body.no-scroll {
+    overflow: hidden;
 }
 
 /* --- Portal de Inicio (Splash Screen) --- */
@@ -145,6 +154,7 @@ body {
     transform-style: preserve-3d;
     transition: transform 0.6s;
     cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .memory-card.flip {
@@ -244,5 +254,25 @@ body {
     }
     .main-content {
         padding-bottom: 90px; /* Más espacio en horizontal */
+    }
+}
+
+@media (min-width: 768px) {
+    .memory-game {
+        max-width: 600px;
+        gap: 1rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .memory-game {
+        max-width: 700px;
+        gap: 1.2rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .memory-game {
+        gap: 0.3rem;
     }
 }
