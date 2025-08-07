@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const squidGameIcons = ['Ο', 'Δ', '▢', '☆', '☂️', '🦑', '💰', '👤']; // Círculo, Triángulo, Cuadrado, Estrella, Paraguas, Calamar, Dinero, Máscara
     const cardValues = [...squidGameIcons, ...squidGameIcons];
     const BEST_SCORE_KEY = 'memoryGameBestScore';
-    const API_URL = '/.netlify/functions/best-score'; // URL de la Netlify Function
+    const API_URL = '/api/best-score'; // Endpoint para la Netlify Function
 
     // Estado del juego
     let moves = 0;
@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Evento para iniciar el juego desde el portal
     startGameBtn.addEventListener('click', () => {
         splashScreen.classList.add('hide');
+        document.body.classList.remove('no-scroll');
         mainContent.style.display = 'flex';
         initializeGame();
     });
@@ -34,26 +35,43 @@ document.addEventListener('DOMContentLoaded', () => {
     resetGameBtn.addEventListener('click', restartGame);
 
     async function loadBestScore() {
+        const localBest = localStorage.getItem(BEST_SCORE_KEY);
+        if (localBest) {
+            bestScoreSpan.textContent = `${localBest} mov.`;
+        }
         try {
-            const response = await fetch(`${API_URL}/best-score`);
+            const response = await fetch(API_URL);
             const data = await response.json();
             const bestScore = data.bestScore;
-            bestScoreSpan.textContent = bestScore ? `${bestScore} mov.` : '-';
+            if (bestScore !== null && bestScore !== undefined) {
+                bestScoreSpan.textContent = `${bestScore} mov.`;
+                localStorage.setItem(BEST_SCORE_KEY, bestScore);
+            }
         } catch (error) {
             console.error('Error al cargar la mejor puntuación:', error);
-            bestScoreSpan.textContent = 'Error';
+            if (!localBest) {
+                bestScoreSpan.textContent = 'Error';
+            }
         }
     }
 
     async function updateBestScore() {
+        const localBest = localStorage.getItem(BEST_SCORE_KEY);
+        if (!localBest || moves < parseInt(localBest, 10)) {
+            localStorage.setItem(BEST_SCORE_KEY, moves);
+        }
         try {
-            await fetch(`${API_URL}/best-score`, {
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ score: moves }),
             });
+            const data = await response.json();
+            if (data.bestScore !== undefined) {
+                localStorage.setItem(BEST_SCORE_KEY, data.bestScore);
+            }
             loadBestScore(); // Recargar la puntuación desde el servidor
         } catch (error) {
             console.error('Error al actualizar la mejor puntuación:', error);

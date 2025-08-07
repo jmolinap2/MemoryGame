@@ -1,7 +1,7 @@
-const { getDeployStore } = require('@netlify/blobs');
+const { getStore } = require('@netlify/blobs');
 
 exports.handler = async (event) => {
-    const store = getDeployStore();
+    const store = getStore({ name: 'memory-game' });
     const key = 'best-score';
 
     if (event.httpMethod === 'GET') {
