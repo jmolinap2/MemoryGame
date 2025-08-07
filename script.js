@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const squidGameIcons = ['Ο', 'Δ', '▢', '☆', '☂️', '🦑', '💰', '👤']; // Círculo, Triángulo, Cuadrado, Estrella, Paraguas, Calamar, Dinero, Máscara
     const cardValues = [...squidGameIcons, ...squidGameIcons];
     const BEST_SCORE_KEY = 'memoryGameBestScore';
+    const API_URL = '/.netlify/functions/best-score'; // URL de la Netlify Function
 
     // Estado del juego
     let moves = 0;
@@ -32,16 +33,30 @@ document.addEventListener('DOMContentLoaded', () => {
     // Evento para reiniciar el juego
     resetGameBtn.addEventListener('click', restartGame);
 
-    function loadBestScore() {
-        const bestScore = localStorage.getItem(BEST_SCORE_KEY);
-        bestScoreSpan.textContent = bestScore ? `${bestScore} mov.` : '-';
+    async function loadBestScore() {
+        try {
+            const response = await fetch(`${API_URL}/best-score`);
+            const data = await response.json();
+            const bestScore = data.bestScore;
+            bestScoreSpan.textContent = bestScore ? `${bestScore} mov.` : '-';
+        } catch (error) {
+            console.error('Error al cargar la mejor puntuación:', error);
+            bestScoreSpan.textContent = 'Error';
+        }
     }
 
-    function updateBestScore() {
-        const bestScore = localStorage.getItem(BEST_SCORE_KEY);
-        if (!bestScore || moves < parseInt(bestScore)) {
-            localStorage.setItem(BEST_SCORE_KEY, moves);
-            bestScoreSpan.textContent = `${moves} mov.`;
+    async function updateBestScore() {
+        try {
+            await fetch(`${API_URL}/best-score`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ score: moves }),
+            });
+            loadBestScore(); // Recargar la puntuación desde el servidor
+        } catch (error) {
+            console.error('Error al actualizar la mejor puntuación:', error);
         }
     }
 
