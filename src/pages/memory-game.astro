@@ -42,10 +42,15 @@ import Layout from '../layouts/Layout.astro';
     height: 100px;
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1), box-shadow 0.3s ease; /* Added box-shadow transition */
     cursor: pointer;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .card:hover:not(.flipped):not(.matched) {
+    transform: scale(1.05); /* Subtle zoom on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 0 15px var(--primary-color); /* Enhanced shadow and glow */
   }
 
   .card.flipped .card-inner {
@@ -71,7 +76,7 @@ import Layout from '../layouts/Layout.astro';
     width: 100%;
     height: 100%;
     position: absolute;
-    backface-visibility: hidden;
+    backface-visibility: hidden; /* Crucial for flip effect */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -79,16 +84,17 @@ import Layout from '../layouts/Layout.astro';
     border-radius: 10px;
     box-sizing: border-box;
     border: 3px solid var(--primary-color);
-    color: var(--text-color);
   }
 
   .card-front {
     background-color: var(--card-front-color);
+    color: var(--background-color); /* Ensure front text is visible on front color */
   }
 
   .card-back {
     background-color: var(--card-back-color);
-    transform: rotateY(180deg);
+    color: var(--text-color); /* Ensure back text is visible on back color */
+    transform: rotateY(180deg); /* Initially rotated for backface */
   }
 
   #restart-memory-game {
@@ -97,7 +103,10 @@ import Layout from '../layouts/Layout.astro';
 </style>
 
 <script is:inline>
-  const cardValues = ['🍎', '🍌', '🍒', '🍇', '🍋', '🍊', '🍓', '🍉'];
+  const cardValues = [
+    '🍎', '🍌', '🍒', '🍇', '🍋', '🍊', '🍓', '🍉',
+    '🍕', '🍔', '🍟', '🍦', '🍩', '🍪', '🍫', '🍬'
+  ];
   let cards = [];
   let flippedCards = [];
   let matchesFound = 0;
@@ -111,7 +120,8 @@ import Layout from '../layouts/Layout.astro';
   const restartButton = document.getElementById('restart-memory-game');
 
   function initializeGame() {
-    const duplicatedValues = [...cardValues, ...cardValues];
+    const gameCardValues = cardValues.slice(0, 8); // Use first 8 for 4x4 grid
+    const duplicatedValues = [...gameCardValues, ...gameCardValues];
     cards = duplicatedValues
       .map((value, index) => ({ id: index, value, flipped: false, matched: false }))
       .sort(() => Math.random() - 0.5);
@@ -135,8 +145,13 @@ import Layout from '../layouts/Layout.astro';
     cards.forEach(card => {
       const cardElement = document.createElement('div');
       cardElement.classList.add('card');
-      if (card.flipped) cardElement.classList.add('flipped');
-      if (card.matched) cardElement.classList.add('matched');
+      // Only add 'flipped' or 'matched' classes if the card state dictates it
+      if (card.flipped) {
+        cardElement.classList.add('flipped');
+      }
+      if (card.matched) {
+        cardElement.classList.add('matched');
+      }
       cardElement.dataset.cardId = card.id;
       cardElement.dataset.cardValue = card.value;
 
@@ -212,7 +227,7 @@ import Layout from '../layouts/Layout.astro';
       }
     }
 
-    if (matchesFound === cardValues.length) {
+    if (matchesFound === gameCardValues.length) {
       stopTimer();
       setTimeout(() => {
         alert(`¡Felicidades! Has ganado el juego de memoria en ${moves} movimientos y ${timerDisplay.textContent} segundos.`);
