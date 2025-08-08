@@ -1,0 +1,111 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Juego de Adivinanzas">
+  <h1>Juego de Adivinanzas</h1>
+  <div class="guessing-game-container">
+    <p>Adivina un número entre 1 y 100.</p>
+    <input type="number" id="guess-input" min="1" max="100" />
+    <button id="submit-guess">Adivinar</button>
+    <p id="message"></p>
+    <p id="attempts">Intentos: 0</p>
+    <button id="restart-guessing-game">Reiniciar Juego</button>
+  </div>
+</Layout>
+
+<style>
+  .guessing-game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 50px;
+  }
+
+  #guess-input {
+    padding: 10px;
+    font-size: 1.2em;
+    width: 150px;
+    text-align: center;
+    background-color: var(--card-back-color); /* Using card-back-color for input background */
+    color: var(--text-color);
+    border: 1px solid var(--key-border-color);
+  }
+
+  #submit-guess,
+  #restart-guessing-game {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    background-color: var(--card-front-color); /* Using card-front-color for button background */
+    color: var(--background-color); /* Text color for buttons */
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+
+  #submit-guess:hover,
+  #restart-guessing-game:hover {
+    opacity: 0.8;
+  }
+
+  #message {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: var(--text-color);
+  }
+
+  #attempts {
+    font-size: 1.1em;
+    color: var(--text-color);
+  }
+</style>
+
+<script is:inline>
+  let randomNumber;
+  let attempts;
+
+  const guessInput = document.getElementById('guess-input');
+  const submitGuessButton = document.getElementById('submit-guess');
+  const messageDisplay = document.getElementById('message');
+  const attemptsDisplay = document.getElementById('attempts');
+  const restartButton = document.getElementById('restart-guessing-game');
+
+  function initializeGame() {
+    randomNumber = Math.floor(Math.random() * 100) + 1;
+    attempts = 0;
+    messageDisplay.textContent = '';
+    attemptsDisplay.textContent = 'Intentos: 0';
+    guessInput.value = '';
+    guessInput.disabled = false;
+    submitGuessButton.disabled = false;
+  }
+
+  function checkGuess() {
+    const userGuess = parseInt(guessInput.value);
+
+    if (isNaN(userGuess) || userGuess < 1 || userGuess > 100) {
+      messageDisplay.textContent = 'Por favor, introduce un número válido entre 1 y 100.';
+      return;
+    }
+
+    attempts++;
+    attemptsDisplay.textContent = `Intentos: ${attempts}`;
+
+    if (userGuess === randomNumber) {
+      messageDisplay.textContent = `¡Felicidades! Adivinaste el número ${randomNumber} en ${attempts} intentos.`;
+      guessInput.disabled = true;
+      submitGuessButton.disabled = true;
+    } else if (userGuess < randomNumber) {
+      messageDisplay.textContent = 'El número es mayor.';
+    } else {
+      messageDisplay.textContent = 'El número es menor.';
+    }
+  }
+
+  submitGuessButton.addEventListener('click', checkGuess);
+  restartButton.addEventListener('click', initializeGame);
+
+  initializeGame();
+</script>

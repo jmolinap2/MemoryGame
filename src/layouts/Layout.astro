@@ -5,18 +5,77 @@
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>{Astro.props.title || 'Juegos'}</title>
 	</head>
 	<body>
+    <button id="theme-toggle">Cambiar Tema</button>
 		<slot />
 	</body>
 </html>
 
-<style>
+<style is:global>
+  :root {
+    --background-color: #ffffff;
+    --text-color: #111827;
+    --card-front-color: #4CAF50;
+    --card-back-color: #f0f0f0;
+    --board-background-color: #333;
+    --x-color: #FF6347;
+    --o-color: #4682B4;
+    --key-border-color: #ccc;
+    --key-disabled-background: #f0f0f0;
+  }
+
+  body.dark-theme {
+    --background-color: #1a202c;
+    --text-color: #f7fafc;
+    --card-front-color: #6b46c1;
+    --card-back-color: #2d3748;
+    --board-background-color: #000;
+    --x-color: #FFD700; /* Gold */
+    --o-color: #87CEEB; /* SkyBlue */
+    --key-border-color: #555;
+    --key-disabled-background: #333;
+  }
+
 	html,
 	body {
 		margin: 0;
 		width: 100%;
 		height: 100%;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
 	}
+
+  .card-front {
+    background-color: var(--card-front-color) !important;
+  }
+
+  .card-back {
+    background-color: var(--card-back-color) !important;
+  }
 </style>
+
+<script is:inline>
+  const themeToggle = document.getElementById('theme-toggle');
+  const body = document.body;
+
+  themeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-theme');
+    // Save theme preference to localStorage
+    if (body.classList.contains('dark-theme')) {
+      localStorage.setItem('theme', 'dark');
+    } else {
+      localStorage.setItem('theme', 'light');
+    }
+  });
+
+  // Apply saved theme on load
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      body.classList.add('dark-theme');
+    }
+  });
+</script>
