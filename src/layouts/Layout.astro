@@ -5,6 +5,9 @@
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 		<title>{Astro.props.title || 'Juegos'}</title>
 	</head>
 	<body>
@@ -15,27 +18,33 @@
 
 <style is:global>
   :root {
-    --background-color: #ffffff;
-    --text-color: #111827;
-    --card-front-color: #4CAF50;
-    --card-back-color: #f0f0f0;
-    --board-background-color: #333;
-    --x-color: #FF6347;
-    --o-color: #4682B4;
-    --key-border-color: #ccc;
-    --key-disabled-background: #f0f0f0;
+    --background-color: #f8f9fa; /* Light Gray */
+    --text-color: #212529; /* Dark Gray */
+    --primary-color: #007bff; /* Blue */
+    --secondary-color: #6c757d; /* Gray */
+    --accent-color: #28a745; /* Green */
+    --card-front-color: var(--primary-color);
+    --card-back-color: #e9ecef; /* Lighter Gray */
+    --board-background-color: #dee2e6; /* Even Lighter Gray */
+    --x-color: #dc3545; /* Red */
+    --o-color: #007bff; /* Blue */
+    --key-border-color: #adb5bd; /* Gray */
+    --key-disabled-background: #ced4da; /* Light Gray */
   }
 
   body.dark-theme {
-    --background-color: #1a202c;
-    --text-color: #f7fafc;
-    --card-front-color: #6b46c1;
-    --card-back-color: #2d3748;
-    --board-background-color: #000;
-    --x-color: #FFD700; /* Gold */
-    --o-color: #87CEEB; /* SkyBlue */
-    --key-border-color: #555;
-    --key-disabled-background: #333;
+    --background-color: #212529; /* Dark Gray */
+    --text-color: #f8f9fa; /* Light Gray */
+    --primary-color: #6610f2; /* Purple */
+    --secondary-color: #6c757d; /* Gray */
+    --accent-color: #20c997; /* Teal */
+    --card-front-color: var(--primary-color);
+    --card-back-color: #343a40; /* Darker Gray */
+    --board-background-color: #495057; /* Even Darker Gray */
+    --x-color: #fd7e14; /* Orange */
+    --o-color: #6f42c1; /* Dark Purple */
+    --key-border-color: #495057; /* Dark Gray */
+    --key-disabled-background: #343a40; /* Darker Gray */
   }
 
 	html,
@@ -43,11 +52,70 @@
 		margin: 0;
 		width: 100%;
 		height: 100%;
+    font-family: 'Poppins', sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
     transition: background-color 0.3s, color 0.3s;
 	}
 
+  h1 {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 30px;
+    color: var(--primary-color);
+  }
+
+  button {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  button:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-2px);
+  }
+
+  .back-to-menu {
+    display: inline-block;
+    margin: 20px;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: bold;
+    padding: 8px 15px;
+    border: 1px solid var(--text-color);
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+
+  .back-to-menu:hover {
+    background-color: var(--text-color);
+    color: var(--background-color);
+  }
+
+  .back-to-menu:active {
+    transform: translateY(1px);
+  }
+
+  /* General styles for game containers */
+  .game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 50px;
+    padding: 30px;
+    border-radius: 15px;
+    background-color: var(--card-back-color);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Specific overrides for card-like elements */
   .card-front {
     background-color: var(--card-front-color) !important;
   }

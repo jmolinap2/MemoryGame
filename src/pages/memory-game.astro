@@ -16,37 +16,25 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <style>
-  .back-to-menu {
-    display: inline-block;
-    margin: 20px;
-    text-decoration: none;
-    color: var(--text-color);
-    font-weight: bold;
-    padding: 8px 15px;
-    border: 1px solid var(--text-color);
-    border-radius: 5px;
-    transition: all 0.3s ease;
-  }
-
-  .back-to-menu:hover {
-    background-color: var(--text-color);
-    color: var(--background-color);
-  }
-
   .game-info {
     display: flex;
     justify-content: space-around;
     width: 420px;
     margin: 20px auto;
     font-size: 1.2em;
+    color: var(--text-color);
   }
 
   .memory-game-grid {
     display: grid;
     grid-template-columns: repeat(4, 100px);
     grid-template-rows: repeat(4, 100px);
-    gap: 10px;
+    gap: 15px;
     perspective: 1000px;
+    padding: 20px;
+    background-color: var(--board-background-color);
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   }
 
   .card {
@@ -54,8 +42,10 @@ import Layout from '../layouts/Layout.astro';
     height: 100px;
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 0.6s;
+    transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
     cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
   .card.flipped .card-inner {
@@ -63,8 +53,9 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .card.matched .card-inner {
-    opacity: 0.5;
+    opacity: 0.6;
     cursor: default;
+    transform: scale(0.95);
   }
 
   .card-inner {
@@ -72,7 +63,8 @@ import Layout from '../layouts/Layout.astro';
     height: 100%;
     position: absolute;
     transform-style: preserve-3d;
-    transition: transform 0.6s;
+    transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+    border-radius: 10px;
   }
 
   .card-front, .card-back {
@@ -83,8 +75,11 @@ import Layout from '../layouts/Layout.astro';
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2em;
-    border-radius: 8px;
+    font-size: 2.5em;
+    border-radius: 10px;
+    box-sizing: border-box;
+    border: 3px solid var(--primary-color);
+    color: var(--text-color);
   }
 
   .card-front {
@@ -97,16 +92,12 @@ import Layout from '../layouts/Layout.astro';
   }
 
   #restart-memory-game {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    font-size: 1em;
-    cursor: pointer;
+    margin-top: 30px;
   }
 </style>
 
 <script is:inline>
-  const cardValues = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  const cardValues = ['🍎', '🍌', '🍒', '🍇', '🍋', '🍊', '🍓', '🍉'];
   let cards = [];
   let flippedCards = [];
   let matchesFound = 0;
