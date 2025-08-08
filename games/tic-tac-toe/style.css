@@ -1,0 +1,55 @@
+
+.tic-tac-toe-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 5px;
+    margin: 20px 0;
+}
+
+.tic-tac-toe-container h2 {
+    font-family: var(--font-display);
+    color: var(--color-primary);
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    background-color: var(--color-surface);
+    border: 2px solid var(--color-border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    cursor: pointer;
+    color: var(--color-text);
+    transition: background-color 0.3s;
+}
+
+.cell:hover {
+    background-color: color-mix(in srgb, var(--color-surface) 80%, white);
+}
+
+#reset-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--color-primary);
+    color: var(--color-bg);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+#reset-btn:hover {
+    transform: scale(1.05);
+}

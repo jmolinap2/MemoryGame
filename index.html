@@ -1,39 +1,42 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Memoria | Estilo Calamar</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <title>Mini Juegos</title>
+    <link rel="stylesheet" href="themes/themes.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="no-scroll">
-    <!-- Portal de Inicio -->
-    <div id="splash-screen">
-        <div class="splash-content">
-            <h1>Juego de Memoria</h1>
-            <p>Encuentra todas las parejas en el menor número de movimientos.</p>
-            <button id="start-game-btn">Iniciar Juego</button>
+<body>
+    <header>
+        <h1>Mini Juegos</h1>
+        <div class="game-selector">
+            <label for="game-select">Juego:</label>
+            <select id="game-select">
+                <option value="memory">Memoria</option>
+                <option value="tic-tac-toe">Tic-Tac-Toe</option>
+                <option value="hangman">Ahorcado</option>
+                <option value="trivia">Trivia</option>
+                <option value="tetris">Tetris</option>
+            </select>
         </div>
-    </div>
-
-    <!-- Contenido Principal del Juego -->
-    <main class="main-content">
-        <h1>Juego de Memoria</h1>
-        <div class="game-container">
-            <div class="game-info">
-                <p>Movimientos: <span id="moves-count">0</span></p>
-                <p>Mejor Puntuación: <span id="best-score">-</span></p>
-            </div>
-            <section class="memory-game">
-                <!-- Las tarjetas se generarán con JavaScript -->
-            </section>
+        <div class="theme-selector">
+            <label for="theme-select">Tema:</label>
+            <select id="theme-select">
+                <option value="light">Claro</option>
+                <option value="dark">Oscuro</option>
+                <option value="system">Sistema</option>
+                <option value="gothic">Gótico</option>
+                <option value="squid-game">Juego del Calamar</option>
+                <option value="game-of-thrones">Juego de Tronos</option>
+                <option value="harry-potter">Harry Potter</option>
+            </select>
         </div>
-        <button id="reset-game-btn">Reiniciar Juego</button>
+    </header>
+    <main id="game-container">
+        <!-- El juego se cargará aquí -->
     </main>
-
-    <script src="script.js" defer></script>
+    <script src="script.js"></script>
 </body>
 </html>
