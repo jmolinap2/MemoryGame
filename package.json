@@ -1,14 +1,14 @@
 {
-  "name": "memory-game-server",
-  "version": "1.0.0",
-  "description": "Backend for the Memory Game",
-  "main": "server.js",
+  "name": "astro-memory-game",
+  "type": "module",
+  "version": "0.0.1",
   "scripts": {
-    "start": "node server.js"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
   },
   "dependencies": {
-    "express": "^4.17.1",
-    "cors": "^2.8.5",
-    "@netlify/blobs": "^6.4.1"
+    "astro": "^5.12.8"
   }
 }
