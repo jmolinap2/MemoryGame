@@ -3,26 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Memoria | Estilo Calamar</title>
+    <title>Mini Juegos | Estilo Calamar</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="no-scroll">
     <!-- Portal de Inicio -->
     <div id="splash-screen">
         <div class="splash-content">
-            <h1>Juego de Memoria</h1>
-            <p>Encuentra todas las parejas en el menor número de movimientos.</p>
+            <h1>Mini Juegos</h1>
+            <p>Disfruta de juegos aleatorios con diferentes temas.</p>
             <button id="start-game-btn">Iniciar Juego</button>
         </div>
     </div>
 
     <!-- Contenido Principal del Juego -->
-    <main class="main-content" style="display: none;">
-        <h1>Juego de Memoria</h1>
-        <div class="game-container">
+    <main class="main-content">
+        <header class="game-header">
+            <h1 id="game-title">Juego</h1>
+            <select id="theme-selector">
+                <option value="system">Sistema</option>
+                <option value="light">Claro</option>
+                <option value="dark">Oscuro</option>
+                <option value="gothic">Gótico</option>
+                <option value="squid">Juego del Calamar</option>
+                <option value="thrones">Juego de Tronos</option>
+                <option value="potter">Harry Potter</option>
+            </select>
+        </header>
+        <div id="memory-game-wrapper" class="game-container">
             <div class="game-info">
                 <p>Movimientos: <span id="moves-count">0</span></p>
                 <p>Mejor Puntuación: <span id="best-score">-</span></p>
@@ -30,6 +41,13 @@
             <section class="memory-game">
                 <!-- Las tarjetas se generarán con JavaScript -->
             </section>
+        </div>
+        <div id="guess-game-wrapper" class="game-container hidden">
+            <p>Adivina el número del 1 al 100</p>
+            <input type="number" id="guess-input" min="1" max="100">
+            <button id="guess-btn">Probar</button>
+            <p id="guess-feedback"></p>
+            <p>Intentos: <span id="guess-attempts">0</span></p>
         </div>
         <button id="reset-game-btn">Reiniciar Juego</button>
     </main>

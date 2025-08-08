@@ -3,64 +3,152 @@ document.addEventListener('DOMContentLoaded', () => {
     const splashScreen = document.getElementById('splash-screen');
     const startGameBtn = document.getElementById('start-game-btn');
     const mainContent = document.querySelector('.main-content');
+    const gameTitle = document.getElementById('game-title');
+    const themeSelector = document.getElementById('theme-selector');
+    const memoryWrapper = document.getElementById('memory-game-wrapper');
+    const guessWrapper = document.getElementById('guess-game-wrapper');
     const gameBoard = document.querySelector('.memory-game');
     const movesCountSpan = document.getElementById('moves-count');
     const bestScoreSpan = document.getElementById('best-score');
     const resetGameBtn = document.getElementById('reset-game-btn');
+    const guessInput = document.getElementById('guess-input');
+    const guessBtn = document.getElementById('guess-btn');
+    const guessFeedback = document.getElementById('guess-feedback');
+    const guessAttemptsSpan = document.getElementById('guess-attempts');
 
-    // Íconos y configuración del juego
-    const squidGameIcons = ['Ο', 'Δ', '▢', '☆', '☂️', '🦑', '💰', '👤']; // Círculo, Triángulo, Cuadrado, Estrella, Paraguas, Calamar, Dinero, Máscara
+    // Manejo de temas
+    const themeClasses = ['theme-light','theme-dark','theme-gothic','theme-squid','theme-thrones','theme-potter'];
+    function applyTheme(theme) {
+        document.body.classList.remove(...themeClasses);
+        if (theme !== 'system') {
+            document.body.classList.add(`theme-${theme}`);
+        }
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'system';
+    themeSelector.value = savedTheme;
+    applyTheme(savedTheme);
+    themeSelector.addEventListener('change', (e) => {
+        const newTheme = e.target.value;
+        applyTheme(newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
+
+    // Selección de juegos
+    const games = ['memory', 'guess'];
+    let currentGame = null;
+
+    startGameBtn.addEventListener('click', () => {
+        splashScreen.classList.add('hide');
+        document.body.classList.remove('no-scroll');
+        mainContent.style.display = 'flex';
+        const random = games[Math.floor(Math.random() * games.length)];
+        currentGame = random;
+        if (random === 'memory') {
+            startMemoryGame();
+        } else {
+            startGuessGame();
+        }
+    });
+
+    resetGameBtn.addEventListener('click', () => {
+        if (currentGame === 'memory') {
+            restartMemoryGame();
+        } else {
+            startGuessGame();
+        }
+    });
+
+    // --- Juego "Adivina el Número" ---
+    let guessNumber = 0;
+    let guessAttempts = 0;
+
+    function startGuessGame() {
+        gameTitle.textContent = 'Adivina el Número';
+        memoryWrapper.classList.add('hidden');
+        guessWrapper.classList.remove('hidden');
+        guessNumber = Math.floor(Math.random() * 100) + 1;
+        guessAttempts = 0;
+        guessAttemptsSpan.textContent = guessAttempts;
+        guessFeedback.textContent = '';
+        guessInput.value = '';
+    }
+
+    function handleGuess() {
+        const value = parseInt(guessInput.value, 10);
+        if (isNaN(value)) return;
+        guessAttempts++;
+        guessAttemptsSpan.textContent = guessAttempts;
+        if (value === guessNumber) {
+            guessFeedback.textContent = '¡Correcto!';
+        } else if (value < guessNumber) {
+            guessFeedback.textContent = 'Más alto';
+        } else {
+            guessFeedback.textContent = 'Más bajo';
+        }
+        guessInput.value = '';
+    }
+
+    guessBtn.addEventListener('click', handleGuess);
+    guessInput.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') handleGuess();
+    });
+
+    // --- Juego de Memoria ---
+    const squidGameIcons = ['Ο', 'Δ', '▢', '☆', '☂️', '🦑', '💰', '👤'];
     const cardValues = [...squidGameIcons, ...squidGameIcons];
     const BEST_SCORE_KEY = 'memoryGameBestScore';
-    const API_URL = '/.netlify/functions/best-score'; // URL de la Netlify Function
+    const API_URL = '/api/best-score';
 
-    // Estado del juego
     let moves = 0;
     let cardsFlipped = 0;
     let hasFlippedCard = false;
     let lockBoard = false;
     let firstCard, secondCard;
 
-    // --- Lógica de Inicio y UI ---
-
-    // Evento para iniciar el juego desde el portal
-    startGameBtn.addEventListener('click', () => {
-        splashScreen.classList.add('hide');
-        mainContent.style.display = 'flex';
-        initializeGame();
-    });
-
-    // Evento para reiniciar el juego
-    resetGameBtn.addEventListener('click', restartGame);
-
     async function loadBestScore() {
+        const localBest = localStorage.getItem(BEST_SCORE_KEY);
+        if (localBest) {
+            bestScoreSpan.textContent = `${localBest} mov.`;
+        }
         try {
-            const response = await fetch(`${API_URL}/best-score`);
+            const response = await fetch(API_URL);
             const data = await response.json();
             const bestScore = data.bestScore;
-            bestScoreSpan.textContent = bestScore ? `${bestScore} mov.` : '-';
+            if (bestScore !== null && bestScore !== undefined) {
+                bestScoreSpan.textContent = `${bestScore} mov.`;
+                localStorage.setItem(BEST_SCORE_KEY, bestScore);
+            }
         } catch (error) {
             console.error('Error al cargar la mejor puntuación:', error);
-            bestScoreSpan.textContent = 'Error';
+            if (!localBest) {
+                bestScoreSpan.textContent = 'Error';
+            }
         }
     }
 
     async function updateBestScore() {
+        const localBest = localStorage.getItem(BEST_SCORE_KEY);
+        if (!localBest || moves < parseInt(localBest, 10)) {
+            localStorage.setItem(BEST_SCORE_KEY, moves);
+        }
         try {
-            await fetch(`${API_URL}/best-score`, {
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ score: moves }),
             });
-            loadBestScore(); // Recargar la puntuación desde el servidor
+            const data = await response.json();
+            if (data.bestScore !== undefined) {
+                localStorage.setItem(BEST_SCORE_KEY, data.bestScore);
+            }
+            loadBestScore();
         } catch (error) {
             console.error('Error al actualizar la mejor puntuación:', error);
         }
     }
-
-    // --- Lógica Principal del Juego ---
 
     function shuffle(array) {
         array.sort(() => Math.random() - 0.5);
@@ -109,7 +197,6 @@ document.addEventListener('DOMContentLoaded', () => {
         cardsFlipped++;
         resetBoard();
 
-        // Comprobar si el juego ha terminado
         if (cardsFlipped === squidGameIcons.length) {
             setTimeout(() => {
                 updateBestScore();
@@ -149,15 +236,21 @@ document.addEventListener('DOMContentLoaded', () => {
         loadBestScore();
         createBoard();
     }
-    
-    function restartGame() {
-        // Oculta las cartas con una animación antes de reiniciar
+
+    function restartMemoryGame() {
         const cards = document.querySelectorAll('.memory-card');
         cards.forEach(card => card.classList.remove('flip'));
-        lockBoard = true; // Bloquea el tablero durante la animación
-
+        lockBoard = true;
         setTimeout(() => {
             initializeGame();
-        }, 600); // Espera a que la animación de volteo termine
+        }, 600);
+    }
+
+    function startMemoryGame() {
+        gameTitle.textContent = 'Juego de Memoria';
+        guessWrapper.classList.add('hidden');
+        memoryWrapper.classList.remove('hidden');
+        initializeGame();
     }
 });
+

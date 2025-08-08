@@ -1,11 +1,73 @@
 :root {
     --font-display: 'Bebas Neue', sans-serif;
     --font-body: 'Lato', sans-serif;
+    --color-bg: #fafafa;
+    --color-card-front: #0077b6;
+    --color-card-back: #e0e0e0;
+    --color-accent: #ff0055;
+    --color-text: #111;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-bg: #111;
+        --color-card-front: #008c8c;
+        --color-card-back: #1e1e1e;
+        --color-accent: #ff0055;
+        --color-text: #f0f0f0;
+    }
+}
+
+body.theme-light {
+    --color-bg: #fafafa;
+    --color-card-front: #0077b6;
+    --color-card-back: #e0e0e0;
+    --color-accent: #ff0055;
+    --color-text: #111;
+}
+
+body.theme-dark {
     --color-bg: #111;
-    --color-card-front: #008c8c; /* Verde-azulado */
+    --color-card-front: #008c8c;
     --color-card-back: #1e1e1e;
-    --color-accent: #ff0055; /* Rosa/Magenta */
+    --color-accent: #ff0055;
     --color-text: #f0f0f0;
+}
+
+body.theme-gothic {
+    --color-bg: #1b0034;
+    --color-card-front: #5e239d;
+    --color-card-back: #2b0048;
+    --color-accent: #e2008c;
+    --color-text: #f8e7ff;
+}
+
+body.theme-squid {
+    --color-bg: #ffe3f1;
+    --color-card-front: #ff0095;
+    --color-card-back: #ffd1e8;
+    --color-accent: #00b8a9;
+    --color-text: #1c1c1c;
+}
+
+body.theme-thrones {
+    --color-bg: #0b1a30;
+    --color-card-front: #274060;
+    --color-card-back: #132238;
+    --color-accent: #a67c52;
+    --color-text: #e0e0e0;
+}
+
+body.theme-potter {
+    --color-bg: #740001;
+    --color-card-front: #d3a625;
+    --color-card-back: #ae0001;
+    --color-accent: #f0c75e;
+    --color-text: #fdf4d7;
+}
+
+.hidden {
+    display: none;
 }
 
 *,
@@ -16,12 +78,42 @@
     padding: 0;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: var(--font-body);
-    background-color: var(--color-bg);
+    background: radial-gradient(circle at top, #222, var(--color-bg));
     color: var(--color-text);
     min-height: 100vh;
-    overflow: hidden; /* Evita el scroll mientras está el splash */
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+body.no-scroll {
+    overflow: hidden;
+}
+
+.game-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.game-header select {
+    padding: 0.3em 0.6em;
+}
+
+@media (min-width: 600px) {
+    .game-header {
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 600px;
+    }
 }
 
 /* --- Portal de Inicio (Splash Screen) --- */
@@ -110,6 +202,33 @@ body {
     margin-bottom: 1rem;
 }
 
+#guess-game-wrapper {
+    text-align: center;
+}
+
+#guess-game-wrapper input {
+    padding: 0.5em;
+    margin: 0.5em;
+    border-radius: 4px;
+    border: 1px solid var(--color-card-front);
+}
+
+#guess-game-wrapper button {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    padding: 0.6em 1.2em;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--color-accent);
+    color: var(--color-text);
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+
+#guess-feedback {
+    min-height: 1.5rem;
+}
+
 .game-info {
     width: 100%;
     display: flex;
@@ -145,6 +264,7 @@ body {
     transform-style: preserve-3d;
     transition: transform 0.6s;
     cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .memory-card.flip {
@@ -244,5 +364,25 @@ body {
     }
     .main-content {
         padding-bottom: 90px; /* Más espacio en horizontal */
+    }
+}
+
+@media (min-width: 768px) {
+    .memory-game {
+        max-width: 600px;
+        gap: 1rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .memory-game {
+        max-width: 700px;
+        gap: 1.2rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .memory-game {
+        gap: 0.3rem;
     }
 }
