@@ -6,6 +6,8 @@ dist/
 .vscode/
 .node_modules/
 node_modules/
+.netlify
+dist
 # dependencies
 node_modules/
 
